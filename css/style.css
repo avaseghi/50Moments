@@ -19,6 +19,17 @@ header {
 
 header h1 {
   margin: 0 0 0 50px;
+  height: 10vh;
+  animation: .5s ease-out 0s 1 slideDown;
+}
+
+@keyframes slideDown {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
 .square-gallery {
@@ -225,6 +236,16 @@ footer div {
   line-height: 1.5;
   font-size: 2em;
   cursor: pointer;
+  animation: .5s ease-out 0s 1 slideUp;
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
 @media only screen and (max-width: 600px) {
