@@ -1,4 +1,4 @@
-let currentSelection;
+let currentSelection, modal;
 
 window.addEventListener('load', (event) => {
   const moments = document.getElementsByClassName("gallery-item");
@@ -15,4 +15,14 @@ function expandSquare(element) {
 
   currentSelection = element.target;
   currentSelection.classList.add("featured-child");
+}
+
+function viewInfo() {
+  modal = document.getElementById("myModal");
+  modal.style.display = "block";
+}
+
+function closeInfo() {
+  modal = document.getElementById("myModal");
+  modal.style.display = "none";
 }
