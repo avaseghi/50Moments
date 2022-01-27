@@ -19,7 +19,7 @@ header {
 
 header h1 {
   margin: 0 0 0 50px;
-  height: 10vh;
+  height: 8vh;
   animation: .5s ease-out 0s 1 slideDown;
 }
 
@@ -226,7 +226,7 @@ footer {
   align-items: center;
 }
 
-footer div {
+.modalBtn {
   width: 50px;
   height: 50px;
   border-radius: 50%;
@@ -235,7 +235,12 @@ footer div {
   text-align: center;
   line-height: 1.5;
   font-size: 2em;
+  color: #000000;
   cursor: pointer;
+  z-index: 2;
+}
+
+#infoBtn {
   animation: .5s ease-out 0s 1 slideUp;
 }
 
@@ -260,3 +265,36 @@ footer div {
 }
 
 /*# sourceMappingURL=style.css.map */
+
+.modal {
+  display: none; 
+  position: fixed; 
+  margin: 10vh auto; 
+  z-index: 1; 
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  overflow: auto;
+  background-color: rgba(0,0,0,0.85); 
+}
+
+.modal-content {
+  margin: auto;
+  display: flex;
+  align-content: center;
+  height: 100%; 
+  width: 50%;
+  padding: 25% 10% 10%;
+  color: #ffffff;
+  text-align: center;
+}
+
+.modal-content-button {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  height: 20vh;
+  display: flex;
+  align-items: center;
+}
