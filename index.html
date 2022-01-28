@@ -11,6 +11,17 @@
     <header>
       <h1>50 Moments</h1>
     </header>
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <p>Fifty small stories, recorded between 2015 - 2019, told by those currently 
+           experiencing street homelessness. Their stories range from the everyday to
+           the memory of a turning point in an individual's life.
+        </p>
+        <div class="modal-content-button">
+          <div class="modalBtn" id="closeBtn" onclick="closeInfo()">&times;</div>
+        </div>
+      </div>
+    </div>
     <div class="square-gallery">
       <div class="gallery-item"></div>
       <div class="gallery-item"></div>
@@ -64,7 +75,7 @@
       <div class="gallery-item"></div>
     </div>
     <footer>
-      <div>i</div>
+      <div class="modalBtn" id="infoBtn" onclick="viewInfo()">i</div>
     </footer>
   </body>
 </html>
