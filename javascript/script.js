@@ -1,17 +1,23 @@
-let currentSelection, modal;
+let modal, currentSelection;
 
 window.addEventListener('load', (event) => {
   const moments = document.getElementsByClassName("gallery-item");
+  const infoBtn = document.getElementById("info-button");
+  modal = document.getElementById("modal");
+  const closeBtn = document.getElementById("close-button");
 
   for(let i = 0; i < moments.length; i++) {
     moments[i].addEventListener('click', (element, i) => expandSquare(element, i));
   }
+
+  infoBtn.addEventListener('click', openModal);
+  closeBtn.addEventListener('click', closeModal);
 });
 
 function expandSquare(element, i) {
 
   console.log(i);
-  
+
   if (currentSelection) {
     currentSelection.classList.remove("featured-child");
   }
@@ -20,12 +26,10 @@ function expandSquare(element, i) {
   currentSelection.classList.add("featured-child");
 }
 
-function viewInfo() {
-  modal = document.getElementById("myModal");
-  modal.style.display = "block";
+function openModal() {
+  modal.style.visibility = "visible";
 }
 
-function closeInfo() {
-  modal = document.getElementById("myModal");
-  modal.style.display = "none";
+function closeModal() {
+  modal.style.visibility = "hidden";
 }
