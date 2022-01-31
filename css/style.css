@@ -18,7 +18,7 @@ header {
 
 header h1 {
   margin: 0 0 0 50px;
-  animation: .5s ease-out 0s 1 slideDown;
+  animation: 0.5s ease-out 0s 1 slideDown;
 }
 
 @keyframes slideDown {
@@ -29,7 +29,6 @@ header h1 {
     transform: translateY(0);
   }
 }
-
 .square-gallery {
   --items: 5;
   --width: 100vw;
@@ -49,18 +48,10 @@ header h1 {
   width: calc((var(--width) - var(--gap) * (var(--items) - 1)) / var(--items));
   height: calc((var(--width) - var(--gap) * (var(--items) - 1)) / var(--items));
   /* To keep it square*/
-  background-color: #ff82a9;
   background-position: center center;
   background-size: cover;
   background-repeat: no-repeat;
   transition: all 0.2s ease-out;
-}
-
-.featured-child {
-  width: calc((var(--width) - var(--gap) * 2) / var(--items) * 2);
-  height: calc((var(--width) - var(--gap) * 2) / var(--items) * 2);
-  grid-column: span 2;
-  grid-row: span 2;
 }
 
 .gallery-item:nth-child(1) {
@@ -288,7 +279,7 @@ footer {
 }
 
 #info-button {
-  animation: .5s ease-out 0s 1 slideUp;
+  animation: 0.5s ease-out 0s 1 slideUp;
 }
 
 @keyframes slideUp {
@@ -299,7 +290,6 @@ footer {
     transform: translateY(0);
   }
 }
-
 #modal {
   position: fixed;
   left: 0;
@@ -310,7 +300,7 @@ footer {
   flex-direction: column;
   justify-content: center;
   visibility: hidden;
-  background-color: rgba(0,0,0,0.85);
+  background-color: rgba(0, 0, 0, 0.85);
   z-index: 1;
 }
 
