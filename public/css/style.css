@@ -254,6 +254,13 @@ header h1 {
   background-image: url("../thumbnails/thumbnail_50.png");
 }
 
+.featured-child {
+  width: calc((var(--width) - var(--gap) * 2) / var(--items) * 2);
+  height: calc((var(--width) - var(--gap) * 2) / var(--items) * 2);
+  grid-row: span 2;
+  grid-column: span 2;
+}
+
 footer {
   position: fixed;
   right: 0;
