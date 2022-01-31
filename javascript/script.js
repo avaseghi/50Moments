@@ -7,22 +7,19 @@ window.addEventListener('load', (event) => {
   const closeBtn = document.getElementById("close-button");
 
   for(let i = 0; i < moments.length; i++) {
-    moments[i].addEventListener('click', (element, i) => expandSquare(element, i));
+    moments[i].addEventListener('click', element => expandSquare(element));
   }
 
   infoBtn.addEventListener('click', openModal);
   closeBtn.addEventListener('click', closeModal);
 });
 
-function expandSquare(element, i) {
-
-  console.log(i);
-
+function expandSquare(e) {
   if (currentSelection) {
     currentSelection.classList.remove("featured-child");
   }
 
-  currentSelection = element.target;
+  currentSelection = e.target;
   currentSelection.classList.add("featured-child");
 }
 
