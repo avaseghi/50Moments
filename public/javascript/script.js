@@ -1,4 +1,4 @@
-let modal, currentSelection;
+let previousSelection, modal;
 
 window.addEventListener('load', (event) => {
   const moments = document.getElementsByClassName("gallery-item");
@@ -15,12 +15,22 @@ window.addEventListener('load', (event) => {
 });
 
 function expandSquare(e) {
-  if (currentSelection) {
-    currentSelection.classList.remove("featured-child");
-  }
+  let currentSelection = e.target;
 
-  currentSelection = e.target;
-  currentSelection.classList.add("featured-child");
+  if (previousSelection) {
+    previousSelection.classList.toggle('featured-child');
+
+    if (previousSelection !== currentSelection) {
+      currentSelection.classList.toggle('featured-child');
+      previousSelection = currentSelection;
+
+    } else {
+      previousSelection = null;
+    }
+  } else {
+    currentSelection.classList.toggle('featured-child');
+    previousSelection = currentSelection;
+  }
 }
 
 function openModal() {
