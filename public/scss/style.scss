@@ -57,13 +57,11 @@ header h1 {
   transition: all 0.2s ease-out;
 }
 
-<<<<<<< HEAD
+
 .gallery-item video {
   display: none;
 }
 
-=======
->>>>>>> 44a436dee28cb09a0b87cc54d20d59d3b7258afb
 @for $i from 1 through 50 {
   .gallery-item:nth-child(#{$i}) {
     background-image: url("../thumbnails/thumbnail_#{$i}.png");
@@ -77,7 +75,6 @@ header h1 {
   grid-column: span 2;
 }
 
-<<<<<<< HEAD
 .featured-child video {
   display: block;
   width: inherit;
@@ -86,8 +83,6 @@ header h1 {
   grid-column: span 2;
 }
 
-=======
->>>>>>> 44a436dee28cb09a0b87cc54d20d59d3b7258afb
 footer {
   position: fixed;
   right: 0;
