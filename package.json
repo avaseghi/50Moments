@@ -1,8 +1,4 @@
 {
-<<<<<<< HEAD
-  "dependencies": {
-    "express": "^4.17.2"
-=======
   "name": "50moments",
   "version": "1.0.0",
   "description": "",
@@ -28,6 +24,5 @@
   },
   "engines": {
     "node": "14.15.0"
->>>>>>> 44a436dee28cb09a0b87cc54d20d59d3b7258afb
   }
 }
