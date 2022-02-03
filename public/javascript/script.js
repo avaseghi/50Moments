@@ -7,7 +7,7 @@ window.addEventListener('load', (event) => {
   const closeBtn = document.getElementById("close-button");
 
   console.log("Page loaded");
-  
+
   for (let i = 0; i < moments.length; i++) {
     // if (i <= 39) {
     //   let video = document.createElement("video");
@@ -62,11 +62,13 @@ function expandSquare(e) {
 }
 
 function openModal() {
-  if (previousSelection.video) {
-      previousSelection.video.pause();
+  if (previousSelection) {
+    if (previousSelection.video) {
+        previousSelection.video.pause();
+    }
+    previousSelection.container.classList.toggle('featured-child');
+    previousSelection = null;
   }
-  previousSelection.container.classList.toggle('featured-child');
-  previousSelection = null;
 
   modal.style.visibility = "visible";
 }
