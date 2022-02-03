@@ -54,10 +54,13 @@ header h1 {
   transition: all 0.2s ease-out;
 }
 
+<<<<<<< HEAD:public/css/style.css
 .gallery-item video {
   display: none;
 }
 
+=======
+>>>>>>> 44a436dee28cb09a0b87cc54d20d59d3b7258afb:css/style.css
 .gallery-item:nth-child(1) {
   background-image: url("../thumbnails/thumbnail_1.png");
 }
@@ -265,6 +268,7 @@ header h1 {
   grid-column: span 2;
 }
 
+<<<<<<< HEAD:public/css/style.css
 .featured-child video {
   display: block;
   width: inherit;
@@ -273,6 +277,8 @@ header h1 {
   grid-column: span 2;
 }
 
+=======
+>>>>>>> 44a436dee28cb09a0b87cc54d20d59d3b7258afb:css/style.css
 footer {
   position: fixed;
   right: 0;
