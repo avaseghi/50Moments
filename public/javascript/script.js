@@ -6,18 +6,20 @@ window.addEventListener('load', (event) => {
   modal = document.getElementById("modal");
   const closeBtn = document.getElementById("close-button");
 
-  for(let i = 0; i < moments.length; i++) {
-    if (i <= 39) {
-      let video = document.createElement("video");
-
-      video.src = "./videos/video_" + (i + 1) + ".mp4";
-      video.addEventListener("ended", function() {
-        previousSelection.container.classList.remove('featured-child');
-        previousSelection = null;
-      });
-
-      moments[i].appendChild(video);
-    }
+  console.log("Page loaded");
+  
+  for (let i = 0; i < moments.length; i++) {
+    // if (i <= 39) {
+    //   let video = document.createElement("video");
+    //
+    //   video.src = "./videos/video_" + (i + 1) + ".mp4";
+    //   video.addEventListener("ended", function() {
+    //     previousSelection.container.classList.remove('featured-child');
+    //     previousSelection = null;
+    //   });
+    //
+    //   moments[i].appendChild(video);
+    // }
 
     moments[i].index = i;
     moments[i].addEventListener('click', element => expandSquare(element));
@@ -29,8 +31,7 @@ window.addEventListener('load', (event) => {
 
 function expandSquare(e) {
   let currentSelection = {
-    index: e.target.index,
-    container: e.target,
+    container: e.currentTarget,
     video: e.target.children[0]
   }
 
@@ -40,8 +41,9 @@ function expandSquare(e) {
     }
     previousSelection.container.classList.toggle('featured-child');
 
-    if (previousSelection.index !== currentSelection.index) {
+    if (previousSelection.container.index !== currentSelection.container.index) {
       currentSelection.container.classList.toggle('featured-child');
+
       if (currentSelection.video) {
         currentSelection.video.play();
       }
@@ -65,7 +67,7 @@ function openModal() {
   }
   previousSelection.container.classList.toggle('featured-child');
   previousSelection = null;
-  
+
   modal.style.visibility = "visible";
 }
 
