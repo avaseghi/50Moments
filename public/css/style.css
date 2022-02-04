@@ -3,6 +3,7 @@
   src: url(../fonts/Sohne-Leicht.woff);
   font-weight: light;
 }
+
 body {
   margin: 0;
   background-color: #000000;
@@ -96,8 +97,13 @@ header h1 {
   transition: all 0.2s ease-out;
 }
 
+<<<<<<< HEAD
 .gallery-item:hover {
   cursor: pointer;
+=======
+.gallery-item video {
+  display: none;
+>>>>>>> main
 }
 
 .gallery-item:nth-child(1) {
@@ -303,6 +309,14 @@ header h1 {
 .featured-child {
   width: calc((var(--width) - var(--gap) * 2) / var(--items) * 2);
   height: calc((var(--width) - var(--gap) * 2) / var(--items) * 2);
+  grid-row: span 2;
+  grid-column: span 2;
+}
+
+.featured-child video {
+  display: block;
+  width: inherit;
+  height: inherit;
   grid-row: span 2;
   grid-column: span 2;
 }

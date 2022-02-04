@@ -101,6 +101,9 @@ header h1 {
 
 .gallery-item:hover {
   cursor: pointer;
+
+.gallery-item video {
+  display: none;
 }
 
 @for $i from 1 through 50 {
@@ -112,6 +115,14 @@ header h1 {
 .featured-child {
   width: calc(((var(--width) - (var(--gap) * 2)) / var(--items) * 2));
   height: calc(((var(--width) - (var(--gap) * 2)) / var(--items) * 2));
+  grid-row: span 2;
+  grid-column: span 2;
+}
+
+.featured-child video {
+  display: block;
+  width: inherit;
+  height: inherit;
   grid-row: span 2;
   grid-column: span 2;
 }
