@@ -3,7 +3,6 @@
   src: url(../fonts/Sohne-Leicht.woff);
   font-weight: light;
 }
-
 body {
   margin: 0;
   background-color: #000000;
@@ -97,13 +96,12 @@ header h1 {
   transition: all 0.2s ease-out;
 }
 
-<<<<<<< HEAD
 .gallery-item:hover {
   cursor: pointer;
-=======
+}
+
 .gallery-item video {
   display: none;
->>>>>>> main
 }
 
 .gallery-item:nth-child(1) {

@@ -12,24 +12,6 @@ window.addEventListener('load', (event) => {
       introText.classList.remove('active');
       introText.classList.add('fade');
     }, 1300)
-  console.log("Page loaded");
-
-  for (let i = 0; i < moments.length; i++) {
-    // if (i <= 39) {
-    //   let video = document.createElement("video");
-    //
-    //   video.src = "./videos/video_" + (i + 1) + ".mp4";
-    //   video.addEventListener("ended", function() {
-    //     previousSelection.container.classList.remove('featured-child');
-    //     previousSelection = null;
-    //   });
-    //
-    //   moments[i].appendChild(video);
-    // }
-
-    moments[i].index = i;
-    moments[i].addEventListener('click', element => expandSquare(element));
-  }
 
   }, 500)
 
@@ -49,8 +31,23 @@ window.addEventListener('load', (event) => {
       const infoBtn = document.getElementById("info-button");
       modal = document.getElementById("modal");
       const closeBtn = document.getElementById("close-button");
+
+      console.log("Page loaded");
+
+      for (let i = 0; i < moments.length; i++) {
+        // if (i <= 39) {
+        //   let video = document.createElement("video");
+        //
+        //   video.src = "./videos/video_" + (i + 1) + ".mp4";
+        //   video.addEventListener("ended", function() {
+        //     previousSelection.container.classList.remove('featured-child');
+        //     previousSelection = null;
+        //   });
+        //
+        //   moments[i].appendChild(video);
+        // }
     
-      for(let i = 0; i < moments.length; i++) {
+        moments[i].index = i;
         moments[i].addEventListener('click', element => expandSquare(element));
       }
       
