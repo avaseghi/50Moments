@@ -1,48 +1,17 @@
 let previousSelection, modal;
-let intro = document.querySelector('.intro');
-let introContainer = document.querySelector('.intro-container');
-let introText = document.getElementById('text');
-let bodyWrapper = document.getElementById('body-wrapper');
 
 window.addEventListener('load', (event) => {
-  setTimeout(()=>{
-    introText.classList.add('active');
+  const moments = document.getElementsByClassName("gallery-item");
+  const infoBtn = document.getElementById("info-button");
+  modal = document.getElementById("modal");
+  const closeBtn = document.getElementById("close-button");
 
-    setTimeout(()=>{
-      introText.classList.remove('active');
-      introText.classList.add('fade');
-    }, 1300)
+  for(let i = 0; i < moments.length; i++) {
+    moments[i].addEventListener('click', element => expandSquare(element));
+  }
 
-  }, 500)
-
-  setTimeout(()=>{
-    introText.innerHTML = "50 Moments";
-    introText.classList.remove('fade');
-    introText.classList.add('active');
-
-    setTimeout(()=>{
-      introText.classList.remove('active');
-      introText.classList.add('fade');
-
-      intro.style.visibility = 'hidden';
-      bodyWrapper.style.visibility = 'visible';
-
-      const moments = document.getElementsByClassName("gallery-item");
-      const infoBtn = document.getElementById("info-button");
-      modal = document.getElementById("modal");
-      const closeBtn = document.getElementById("close-button");
-    
-      for(let i = 0; i < moments.length; i++) {
-        moments[i].addEventListener('click', element => expandSquare(element));
-      }
-      
-      infoBtn.addEventListener('click', openModal);
-      closeBtn.addEventListener('click', closeModal);
-
-    }, 3200)
-
-  }, 2700)
-  
+  infoBtn.addEventListener('click', openModal);
+  closeBtn.addEventListener('click', closeModal);
 });
 
 function expandSquare(e) {
@@ -65,9 +34,9 @@ function expandSquare(e) {
 }
 
 function openModal() {
-  modal.style.visibility = 'visible';
+  modal.style.visibility = "visible";
 }
 
 function closeModal() {
-  modal.style.visibility = 'hidden';
+  modal.style.visibility = "hidden";
 }
