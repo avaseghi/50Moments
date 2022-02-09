@@ -37,7 +37,7 @@ header h1 {
   --items: 5;
   --width: 100vw;
   --gap: 5px;
-  display: grid;
+  display: inline-grid;
   grid-template-columns: repeat(var(--items), 1fr);
   grid-auto-flow: row dense;
   grid-gap: var(--gap);
