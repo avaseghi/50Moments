@@ -5,6 +5,14 @@ let introText = document.getElementById('text');
 let bodyWrapper = document.getElementById('body-wrapper');
 
 window.addEventListener('load', (event) => {
+  const moments = document.getElementsByClassName("gallery-item");
+  const videos = document.getElementsByTagName("video");
+  const infoBtn = document.getElementById("info-button");
+  modal = document.getElementById("modal");
+  const closeBtn = document.getElementById("close-button");
+
+  console.log("Page loaded");
+  
   setTimeout(()=>{
     introText.classList.add('active');
 
@@ -26,13 +34,6 @@ window.addEventListener('load', (event) => {
 
       intro.style.visibility = 'hidden';
       bodyWrapper.style.visibility = 'visible';
-
-      const moments = document.getElementsByClassName("gallery-item");
-      const infoBtn = document.getElementById("info-button");
-      modal = document.getElementById("modal");
-      const closeBtn = document.getElementById("close-button");
-
-      console.log("Page loaded");
 
       for (let i = 0; i < moments.length; i++) {
         // if (i <= 39) {
@@ -58,6 +59,15 @@ window.addEventListener('load', (event) => {
 
   }, 2700)
   
+  for (let i = 0; i < videos.length; i++) {
+    videos[i].addEventListener("ended", function() {
+      previousSelection.container.classList.remove('featured-child');
+      previousSelection = null;
+    });
+  }
+
+  infoBtn.addEventListener('click', openModal);
+  closeBtn.addEventListener('click', closeModal);
 });
 
 function expandSquare(e) {
