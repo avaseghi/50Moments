@@ -2,6 +2,7 @@ let previousSelection, modal;
 
 window.addEventListener('load', (event) => {
   const moments = document.getElementsByClassName("gallery-item");
+  const videos = document.getElementsByTagName("video");
   const infoBtn = document.getElementById("info-button");
   modal = document.getElementById("modal");
   const closeBtn = document.getElementById("close-button");
@@ -23,6 +24,13 @@ window.addEventListener('load', (event) => {
 
     moments[i].index = i;
     moments[i].addEventListener('click', element => expandSquare(element));
+  }
+
+  for (let i = 0; i < videos.length; i++) {
+    videos[i].addEventListener("ended", function() {
+      previousSelection.container.classList.remove('featured-child');
+      previousSelection = null;
+    });
   }
 
   infoBtn.addEventListener('click', openModal);
