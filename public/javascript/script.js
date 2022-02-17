@@ -30,35 +30,63 @@ window.addEventListener('load', (event) => {
 
     setTimeout(()=>{
       introText.classList.remove('active');
-      introText.classList.add('fade');
+      introText.classList.add('disappear');
 
       intro.style.visibility = 'hidden';
       bodyWrapper.style.visibility = 'visible';
 
       for (let i = 0; i < moments.length; i++) {
-        // if (i <= 39) {
-        //   let video = document.createElement("video");
-        //
-        //   video.src = "./videos/video_" + (i + 1) + ".mp4";
-        //   video.addEventListener("ended", function() {
-        //     previousSelection.container.classList.remove('featured-child');
-        //     previousSelection = null;
-        //   });
-        //
-        //   moments[i].appendChild(video);
-        // }
-    
         moments[i].index = i;
-        moments[i].addEventListener('click', element => expandSquare(element));
+        animateEvens(i);
+
+        setTimeout(()=>{
+          animateOdds(i);
+        }, 10000)
       }
-      
-      infoBtn.addEventListener('click', openModal);
-      closeBtn.addEventListener('click', closeModal);
 
     }, 3200)
 
-  }, 2700)
+  }, 2500)
   
+  function animateEvens(i) {
+    if (i % 2 == 0) {
+
+      setTimeout(()=>{
+        moments[i].style.opacity = 1;
+      }, 300 * i)
+
+    }
+  }
+
+  function animateOdds(i){
+    console.log('here');
+    if (i % 2 == 1) {
+      setTimeout(()=>{
+        moments[i].style.opacity = 1;
+      }, 300 * i)
+    }
+  }
+
+  for (let i = 0; i < moments.length; i++) {
+    // if (i <= 39) {
+    //   let video = document.createElement("video");
+    //
+    //   video.src = "./videos/video_" + (i + 1) + ".mp4";
+    //   video.addEventListener("ended", function() {
+    //     previousSelection.container.classList.remove('featured-child');
+    //     previousSelection = null;
+    //   });
+    //
+    //   moments[i].appendChild(video);
+    // }
+
+    moments[i].index = i;
+    moments[i].addEventListener('click', element => expandSquare(element));
+  }
+  
+  infoBtn.addEventListener('click', openModal);
+  closeBtn.addEventListener('click', closeModal);
+
   for (let i = 0; i < videos.length; i++) {
     videos[i].addEventListener("ended", function() {
       previousSelection.container.classList.remove('featured-child');
@@ -66,8 +94,6 @@ window.addEventListener('load', (event) => {
     });
   }
 
-  infoBtn.addEventListener('click', openModal);
-  closeBtn.addEventListener('click', closeModal);
 });
 
 function expandSquare(e) {

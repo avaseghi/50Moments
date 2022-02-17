@@ -46,6 +46,11 @@ body {
   opacity: 0;
   transition: ease-in-out 1s;
 }
+
+.intro-text.disappear {
+  opacity: 0;
+  transition: linear 16s;
+}
 /* */
 
 .body-wrapper {
@@ -53,7 +58,6 @@ body {
 }
 
 header {
-  // visibility: hidden;
   height: 10vh;
   display: flex;
   align-items: center;
@@ -62,7 +66,7 @@ header {
 
 header h1 {
   margin: 0 0 0 50px;
-  animation: .5s ease-out 0s 1 slideDown;
+  animation: 1s ease-out 5.5s 1 slideDown;
 }
 
 @keyframes slideDown {
@@ -97,6 +101,7 @@ header h1 {
   background-size: cover;
   background-repeat: no-repeat;
   transition: all 0.2s ease-out;
+  opacity: 0;
 }
 
 .gallery-item:hover {
@@ -154,7 +159,7 @@ footer {
 }
 
 #info-button {
-  animation: .5s ease-out 0s 1 slideUp;
+  animation: 1s ease-out 5.5s 1 slideUp;
 }
 
 @keyframes slideUp {
