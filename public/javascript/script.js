@@ -1,13 +1,17 @@
-let previousSelection, modal;
+let previousSelection, lastInteraction, thumbnail, modal;
 
 window.addEventListener('load', (event) => {
   const moments = document.getElementsByClassName("gallery-item");
-  const videos = document.getElementsByTagName("video");
+  const videos = document.getElementsByClassName("vid");
+  thumbnails = document.getElementsByClassName("test");
   const infoBtn = document.getElementById("info-button");
   modal = document.getElementById("modal");
   const closeBtn = document.getElementById("close-button");
 
   console.log("Page loaded");
+
+  lastInteraction = new Date();
+  setInterval(interactionTimer, 1000);
 
   for (let i = 0; i < moments.length; i++) {
     // if (i <= 39) {
@@ -26,6 +30,19 @@ window.addEventListener('load', (event) => {
     moments[i].addEventListener('click', element => expandSquare(element));
   }
 
+  for(let i = 0; i < thumbnails.length; i ++) {
+    let thumbnail = {
+      image: thumbnails[i].querySelector('img'),
+      video: thumbnails[i].querySelector('video')
+    }
+
+    if (thumbnail.video) {
+      thumbnail.video.addEventListener("ended", function() {
+        thumbnail.image.style.opacity = "1";
+      });
+    }
+  }
+
   for (let i = 0; i < videos.length; i++) {
     videos[i].addEventListener("ended", function() {
       previousSelection.container.classList.remove('featured-child');
@@ -37,10 +54,34 @@ window.addEventListener('load', (event) => {
   closeBtn.addEventListener('click', closeModal);
 });
 
+function interactionTimer() {
+  let currentTime = new Date();
+  let dif = lastInteraction.getTime() - currentTime.getTime();
+
+  let secondsFrom = dif / 1000;
+  let secondsBetween = Math.abs(secondsFrom);
+
+  console.log(secondsBetween);
+
+  if (secondsBetween >= 10) {
+    if (!previousSelection) {
+      for (let i = 0; i < thumbnails.length; i ++) {
+        let thumbnail = {
+          image: thumbnails[i].querySelector('img'),
+          video: thumbnails[i].querySelector('video')
+        }
+        thumbnail.image.style.opacity = "0";
+        thumbnail.video.play();
+      }
+    }
+    lastInteraction = currentTime;
+  }
+}
+
 function expandSquare(e) {
   let currentSelection = {
     container: e.currentTarget,
-    video: e.target.children[0]
+    video: e.currentTarget.querySelector('.vid')
   }
 
   if (previousSelection) {
