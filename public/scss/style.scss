@@ -92,9 +92,6 @@ header h1 {
   0% {
     opacity: 1;
   }
-  50% {
-    color: #000000;
-  }
   100% {
     opacity: 0;
   }
@@ -102,7 +99,7 @@ header h1 {
 
 .featured-child .thumbnail {
   opacity: 0;
-  animation: 1.5s ease-in-out videoTransition;
+  animation: .1s ease-out videoTransition;
 }
 
 .featured-child .vid {
