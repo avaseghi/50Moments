@@ -1,12 +1,9 @@
-let previousSelection, modal;
-let intro = document.querySelector('.intro');
-let introContainer = document.querySelector('.intro-container');
-let introText = document.getElementById('text');
-let bodyWrapper = document.getElementById('body-wrapper');
+let previousSelection, lastInteraction, thumbnail, modal;
 
 window.addEventListener('load', (event) => {
   const moments = document.getElementsByClassName("gallery-item");
-  const videos = document.getElementsByTagName("video");
+  const videos = document.getElementsByClassName("vid");
+  thumbnails = document.getElementsByClassName("test");
   const infoBtn = document.getElementById("info-button");
   modal = document.getElementById("modal");
   const closeBtn = document.getElementById("close-button");
@@ -67,6 +64,9 @@ window.addEventListener('load', (event) => {
     }
   }
 
+  lastInteraction = new Date();
+  setInterval(interactionTimer, 1000);
+
   for (let i = 0; i < moments.length; i++) {
     // if (i <= 39) {
     //   let video = document.createElement("video");
@@ -87,6 +87,19 @@ window.addEventListener('load', (event) => {
   infoBtn.addEventListener('click', openModal);
   closeBtn.addEventListener('click', closeModal);
 
+  for(let i = 0; i < thumbnails.length; i ++) {
+    let thumbnail = {
+      image: thumbnails[i].querySelector('img'),
+      video: thumbnails[i].querySelector('video')
+    }
+
+    if (thumbnail.video) {
+      thumbnail.video.addEventListener("ended", function() {
+        thumbnail.image.style.opacity = "1";
+      });
+    }
+  }
+
   for (let i = 0; i < videos.length; i++) {
     videos[i].addEventListener("ended", function() {
       previousSelection.container.classList.remove('featured-child');
@@ -96,10 +109,34 @@ window.addEventListener('load', (event) => {
 
 });
 
+function interactionTimer() {
+  let currentTime = new Date();
+  let dif = lastInteraction.getTime() - currentTime.getTime();
+
+  let secondsFrom = dif / 1000;
+  let secondsBetween = Math.abs(secondsFrom);
+
+  console.log(secondsBetween);
+
+  if (secondsBetween >= 10) {
+    if (!previousSelection) {
+      for (let i = 0; i < thumbnails.length; i ++) {
+        let thumbnail = {
+          image: thumbnails[i].querySelector('img'),
+          video: thumbnails[i].querySelector('video')
+        }
+        thumbnail.image.style.opacity = "0";
+        thumbnail.video.play();
+      }
+    }
+    lastInteraction = currentTime;
+  }
+}
+
 function expandSquare(e) {
   let currentSelection = {
     container: e.currentTarget,
-    video: e.target.children[0]
+    video: e.currentTarget.querySelector('.vid')
   }
 
   if (previousSelection) {
