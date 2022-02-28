@@ -9,60 +9,6 @@ window.addEventListener('load', (event) => {
   const closeBtn = document.getElementById("close-button");
 
   console.log("Page loaded");
-  
-  setTimeout(()=>{
-    introText.classList.add('active');
-
-    setTimeout(()=>{
-      introText.classList.remove('active');
-      introText.classList.add('fade');
-    }, 1300)
-
-  }, 500)
-
-  setTimeout(()=>{
-    introText.innerHTML = "50 Moments";
-    introText.classList.remove('fade');
-    introText.classList.add('active');
-
-    setTimeout(()=>{
-      introText.classList.remove('active');
-      introText.classList.add('disappear');
-
-      intro.style.visibility = 'hidden';
-      bodyWrapper.style.visibility = 'visible';
-
-      for (let i = 0; i < moments.length; i++) {
-        moments[i].index = i;
-        animateEvens(i);
-
-        setTimeout(()=>{
-          animateOdds(i);
-        }, 10000)
-      }
-
-    }, 3200)
-
-  }, 2500)
-  
-  function animateEvens(i) {
-    if (i % 2 == 0) {
-
-      setTimeout(()=>{
-        moments[i].style.opacity = 1;
-      }, 300 * i)
-
-    }
-  }
-
-  function animateOdds(i){
-    console.log('here');
-    if (i % 2 == 1) {
-      setTimeout(()=>{
-        moments[i].style.opacity = 1;
-      }, 300 * i)
-    }
-  }
 
   lastInteraction = new Date();
   setInterval(interactionTimer, 1000);
@@ -83,9 +29,6 @@ window.addEventListener('load', (event) => {
     moments[i].index = i;
     moments[i].addEventListener('click', element => expandSquare(element));
   }
-  
-  infoBtn.addEventListener('click', openModal);
-  closeBtn.addEventListener('click', closeModal);
 
   for(let i = 0; i < thumbnails.length; i ++) {
     let thumbnail = {
@@ -107,6 +50,8 @@ window.addEventListener('load', (event) => {
     });
   }
 
+  infoBtn.addEventListener('click', openModal);
+  closeBtn.addEventListener('click', closeModal);
 });
 
 function interactionTimer() {
@@ -178,5 +123,5 @@ function openModal() {
 }
 
 function closeModal() {
-  modal.style.visibility = 'hidden';
+  modal.style.visibility = "hidden";
 }
