@@ -30,7 +30,7 @@ header h1 {
   }
 }
 .square-gallery {
-  --items: 5;
+  --items: 10;
   --width: 100vw;
   --gap: 5px;
   display: grid;
