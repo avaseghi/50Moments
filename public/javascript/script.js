@@ -88,11 +88,16 @@ function expandSquare(e) {
     if (previousSelection.video) {
         previousSelection.video.pause();
     }
-    previousSelection.container.classList.toggle('featured-child');
+      
+    previousSelection.container.classList.replace('fadein', 'fadeout');
+
+    setTimeout(() => {
+      currentSelection.container.classList.toggle('expand');
+    }, 780);
 
     if (previousSelection.container.index !== currentSelection.container.index) {
-      currentSelection.container.classList.toggle('featured-child');
-
+      // not sure what you wanted to do when the user selects a new video?
+      
       if (currentSelection.video) {
         currentSelection.video.play();
       }
@@ -105,8 +110,15 @@ function expandSquare(e) {
     if (currentSelection.video) {
       currentSelection.video.play();
     }
-    currentSelection.container.classList.toggle('featured-child');
+   
+    currentSelection.container.classList.add('fadein');
+   
+    setTimeout(() => {
+      currentSelection.container.classList.add('expand');
+    }, 700);
+
     previousSelection = currentSelection;
+    previousSelection.container.classList.replace('fadeout', 'fadein');
   }
 }
 
@@ -115,7 +127,7 @@ function openModal() {
     if (previousSelection.video) {
         previousSelection.video.pause();
     }
-    previousSelection.container.classList.toggle('featured-child');
+    previousSelection.container.classList.toggle('fade');
     previousSelection = null;
   }
 
