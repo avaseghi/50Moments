@@ -269,7 +269,12 @@ header h1 {
   grid-column: span 2;
 }
 
-@keyframes videoTransitionIn {
+.expand .vid {
+  grid-row: span 2;
+  grid-column: span 2;
+}
+
+@keyframes thumbnailTransitionIn {
   0% {
     opacity: 1;
   }
@@ -277,17 +282,7 @@ header h1 {
     opacity: 0;
   }
 }
-.fadein .thumbnail {
-  opacity: 0;
-  animation: 1s ease-in-out videoTransitionIn;
-}
-
-.expand .vid {
-  grid-row: span 2;
-  grid-column: span 2;
-}
-
-@keyframes videoTransitionOut {
+@keyframes thumbnailTransitionOut {
   0% {
     opacity: 0;
   }
@@ -298,9 +293,14 @@ header h1 {
     opacity: 1;
   }
 }
+.fadein .thumbnail {
+  opacity: 0;
+  animation: 1s ease-in-out thumbnailTransitionIn;
+}
+
 .fadeout .thumbnail {
   opacity: 1;
-  animation: 2s ease-in-out videoTransitionOut;
+  animation: 2.5s ease-in-out thumbnailTransitionOut;
 }
 
 footer {
@@ -381,7 +381,7 @@ footer {
     --items: 2;
   }
 
-  .featured-child {
+  .expand {
     width: calc(var(--width) / var(--items) * 2);
     height: calc(var(--width) / var(--items) * 2);
   }

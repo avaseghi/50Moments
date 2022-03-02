@@ -96,7 +96,6 @@ function expandSquare(e) {
     }, 780);
 
     if (previousSelection.container.index !== currentSelection.container.index) {
-      // not sure what you wanted to do when the user selects a new video?
       
       if (currentSelection.video) {
         currentSelection.video.play();
@@ -110,12 +109,12 @@ function expandSquare(e) {
     if (currentSelection.video) {
       currentSelection.video.play();
     }
-   
+
     currentSelection.container.classList.add('fadein');
    
     setTimeout(() => {
       currentSelection.container.classList.add('expand');
-    }, 700);
+    }, 850);
 
     previousSelection = currentSelection;
     previousSelection.container.classList.replace('fadeout', 'fadein');
