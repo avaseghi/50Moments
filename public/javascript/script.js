@@ -56,10 +56,10 @@ async function animateIntro() {
               thumbnails.splice(randNum, 1);
               index ++;
             }
-          }, 4000);
-        }, 3500);
-    }, 3000);
-  }, 2000);
+          }, 3800);
+        }, 2350);
+    }, 2300);
+  }, 150);
 
   // bind modal buttons
   infoBtn.addEventListener('click', function() {
