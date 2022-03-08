@@ -21,45 +21,56 @@ async function animateIntro() {
     gallery.classList.toggle('credit');
     gallery.classList.toggle('fade-in');
 
-      // fade out credit
-      setTimeout(function() {
+    // fade out credit
+    setTimeout(function() {
+      gallery.classList.toggle('fade-in');
+
+      // fade in credit2
+      setTimeout(function () {
+        gallery.classList.toggle('credit-two');
         gallery.classList.toggle('fade-in');
 
-        // fade in title
+        // fade out credit2
         setTimeout(function() {
           gallery.classList.toggle('fade-in');
-          gallery.classList.toggle('credit');
-          gallery.classList.toggle('title');
 
-          // fade out title
+          // fade in title
           setTimeout(function() {
             gallery.classList.toggle('fade-in');
-            let index = 1;
+            gallery.classList.toggle('credit-two');
+            gallery.classList.toggle('title');
 
-            // randomly fade in each thumbnail
-            while(thumbnails.length > 0){
-              let randNum = Math.floor(Math.random() * thumbnails.length);
-              let randomThumbnail = thumbnails[randNum];
+            // fade out title
+            setTimeout(function() {
+              gallery.classList.toggle('fade-in');
+              let index = 1;
 
-              setTimeout(function() {
-                randomThumbnail.style.opacity = "1";
-              }, index * 200 );
+              // randomly fade in each thumbnail
+              while(thumbnails.length > 0){
+                let randNum = Math.floor(Math.random() * thumbnails.length);
+                let randomThumbnail = thumbnails[randNum];
 
-              // animate title and info button in
-              if (index === 50) {
                 setTimeout(function() {
-                  title.classList.add("visible-header");
-                  infoBtn.classList.add("visible-button");
+                  randomThumbnail.style.opacity = "1";
                 }, index * 200 );
-              }
 
-              thumbnails.splice(randNum, 1);
-              index ++;
-            }
-          }, 4000);
-        }, 3500);
-    }, 3000);
-  }, 2000);
+                // animate title and info button in
+                if (index === 50) {
+                  setTimeout(function() {
+                    title.classList.add("visible-header");
+                    infoBtn.classList.add("visible-button");
+                  }, index * 200 );
+                }
+
+                thumbnails.splice(randNum, 1);
+                index ++;
+              }
+            }, 4300);
+          }, 4100);
+        }, 3900);
+      }, 2450);
+    }, 2400);
+  }, 120);
 
   // bind modal buttons
   infoBtn.addEventListener('click', function() {
@@ -161,7 +172,8 @@ function expandSquare(e) {
 
   if (previousSelection) {
     if (previousSelection.video) {
-        previousSelection.video.pause();
+      previousSelection.video.pause();
+      previousSelection.video.currentTime = 0;
     }
 
     fadeTransition(previousSelection);

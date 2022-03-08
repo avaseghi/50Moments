@@ -72,11 +72,16 @@ header h1 {
 }
 
 .credit::after {
-  content: "ELO Films in collaboration with SXSW present";
+  content: "EloFilms presents";
+}
+
+.credit-two::after {
+  content: "in association with SXSW"
 }
 
 .title::after {
-  content: "50 Moments";
+  // content: "50 Moments";
+  content: "50 MOMENTS";
 }
 
 .fade-in::after {
@@ -125,6 +130,7 @@ header h1 {
   height: calc(((var(--width) - (var(--gap) * 4)) / var(--items) * 2));
   grid-row: span 2;
   grid-column: span 2;
+  transition: opacity 1s ease-in-out;
 }
 
 .featured-child .thumbnail {
@@ -144,7 +150,8 @@ header h1 {
   height: inherit;
   background-color: #000;
   opacity: 0;
-  transition: opacity 0.5s ease-out;
+  // transition: opacity 0.5s ease-out;
+
 }
 
 .opaque::after {
