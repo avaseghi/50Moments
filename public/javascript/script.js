@@ -17,18 +17,25 @@ async function animateIntro() {
   let thumbnails = await createMoments(gallery);
 
   // fade in credit
-  setTimeout(function () {
-    gallery.classList.toggle('credit');
+  gallery.classList.toggle('elo-credit');
+  gallery.classList.toggle('fade-in');
+
+    // fade out credit
+  setTimeout(function() {
     gallery.classList.toggle('fade-in');
 
-      // fade out credit
+    // fade in title
+    setTimeout(function() {
+      gallery.classList.toggle('fade-in');
+      gallery.classList.toggle('elo-credit');
+      gallery.classList.toggle('sxsw-credit');
+
       setTimeout(function() {
         gallery.classList.toggle('fade-in');
 
-        // fade in title
         setTimeout(function() {
           gallery.classList.toggle('fade-in');
-          gallery.classList.toggle('credit');
+          gallery.classList.toggle('sxsw-credit');
           gallery.classList.toggle('title');
 
           // fade out title
@@ -37,29 +44,30 @@ async function animateIntro() {
             let index = 1;
 
             // randomly fade in each thumbnail
-            while(thumbnails.length > 0){
+            while(thumbnails.length > 0) {
               let randNum = Math.floor(Math.random() * thumbnails.length);
               let randomThumbnail = thumbnails[randNum];
 
               setTimeout(function() {
                 randomThumbnail.style.opacity = "1";
-              }, index * 200 );
+              }, 3000 + (index * 200));
 
               // animate title and info button in
               if (index === 50) {
                 setTimeout(function() {
                   title.classList.add("visible-header");
                   infoBtn.classList.add("visible-button");
-                }, index * 200 );
+                }, 3000 + (index * 200));
               }
 
               thumbnails.splice(randNum, 1);
               index ++;
             }
           }, 4000);
-        }, 3500);
-    }, 3000);
-  }, 2000);
+        }, 4000);
+      }, 4000);
+    }, 4000);
+  }, 4000);
 
   // bind modal buttons
   infoBtn.addEventListener('click', function() {
@@ -162,6 +170,7 @@ function expandSquare(e) {
   if (previousSelection) {
     if (previousSelection.video) {
         previousSelection.video.pause();
+        previousSelection.video.currentTime = 0;
     }
 
     fadeTransition(previousSelection);
@@ -176,6 +185,7 @@ function expandSquare(e) {
       previousSelection = currentSelection;
 
     } else {
+
       previousSelection = null;
     }
 
