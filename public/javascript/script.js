@@ -1,4 +1,4 @@
-let previousSelection, lastInteraction;
+let previousSelection, lastInteraction, thumbnailsLoaded;
 
 window.addEventListener('load', (event) => {
   animateIntro();
@@ -16,23 +16,25 @@ async function animateIntro() {
   const modal = document.getElementById("modal");
   let thumbnails = await createMoments(gallery);
 
-  // fade in credit
+  // fade in credit part 1
   gallery.classList.toggle('elo-credit');
   gallery.classList.toggle('fade-in');
 
-    // fade out credit
+  // fade out credit part 1
   setTimeout(function() {
     gallery.classList.toggle('fade-in');
 
-    // fade in title
+    // fade in credit part 2
     setTimeout(function() {
       gallery.classList.toggle('fade-in');
       gallery.classList.toggle('elo-credit');
       gallery.classList.toggle('sxsw-credit');
 
+      // fade out credit part 1
       setTimeout(function() {
         gallery.classList.toggle('fade-in');
 
+        // fade in title
         setTimeout(function() {
           gallery.classList.toggle('fade-in');
           gallery.classList.toggle('sxsw-credit');
@@ -57,6 +59,7 @@ async function animateIntro() {
                 setTimeout(function() {
                   title.classList.add("visible-header");
                   infoBtn.classList.add("visible-button");
+                  thumbnailsLoaded = true;
                 }, 3000 + (index * 200));
               }
 
@@ -73,6 +76,7 @@ async function animateIntro() {
   infoBtn.addEventListener('click', function() {
     openModal(modal)
   });
+
   closeBtn.addEventListener('click', function() {
     closeModal(modal)
   });
@@ -162,20 +166,35 @@ function bindVideoEvents(video) {
 }
 
 function expandSquare(e) {
-  let currentSelection = {
-    container: e.currentTarget,
-    video: e.currentTarget.querySelector('.vid')
-  }
-
-  if (previousSelection) {
-    if (previousSelection.video) {
-        previousSelection.video.pause();
-        previousSelection.video.currentTime = 0;
+  if (thumbnailsLoaded) {
+    let currentSelection = {
+      container: e.currentTarget,
+      video: e.currentTarget.querySelector('.vid')
     }
 
-    fadeTransition(previousSelection);
+    if (previousSelection) {
+      if (previousSelection.video) {
+          previousSelection.video.pause();
+          previousSelection.video.currentTime = 0;
+      }
 
-    if (previousSelection.container.index !== currentSelection.container.index) {
+      fadeTransition(previousSelection);
+
+      if (previousSelection.container.index !== currentSelection.container.index) {
+        fadeTransition(currentSelection);
+
+        if (currentSelection.video) {
+          currentSelection.video.play();
+        }
+
+        previousSelection = currentSelection;
+
+      } else {
+
+        previousSelection = null;
+      }
+
+    } else {
       fadeTransition(currentSelection);
 
       if (currentSelection.video) {
@@ -183,20 +202,7 @@ function expandSquare(e) {
       }
 
       previousSelection = currentSelection;
-
-    } else {
-
-      previousSelection = null;
     }
-
-  } else {
-    fadeTransition(currentSelection);
-
-    if (currentSelection.video) {
-      currentSelection.video.play();
-    }
-
-    previousSelection = currentSelection;
   }
 }
 
@@ -213,12 +219,11 @@ function fadeTransition(selection) {
 }
 
 function openModal(modal) {
-  console.log("opening modal");
-
   if (previousSelection) {
     if (previousSelection.video) {
         previousSelection.video.pause();
     }
+
     previousSelection.container.classList.toggle('featured-child');
     previousSelection = null;
   }
@@ -244,14 +249,17 @@ function interactionTimer() {
   if (secondsBetween >= 10) {
     if (!previousSelection) {
       for (let i = 0; i < thumbnails.length; i ++) {
+
         let thumbnail = {
           image: thumbnails[i].querySelector('img'),
           video: thumbnails[i].querySelector('video')
         }
+
         thumbnail.image.style.opacity = "0";
         thumbnail.video.play();
       }
     }
+
     lastInteraction = currentTime;
   }
 }
