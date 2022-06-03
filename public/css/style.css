@@ -304,14 +304,18 @@ header h1 {
   height: inherit;
 }
 
-.gallery-item .thumbnail {
+.thumbnail {
   opacity: 0;
   transition: opacity 1s ease-in-out;
 }
 
-.thumbnail img {
-  opacity: 1;
+.image-default {
+  opacity: 0;
   transition: opacity 0.5s ease-in-out;
+}
+
+.visibility {
+  opacity: 1;
 }
 
 .gallery-item .vid {
@@ -323,10 +327,6 @@ header h1 {
   height: calc((var(--width) - var(--gap) * 4) / var(--items) * 2);
   grid-row: span 2;
   grid-column: span 2;
-}
-
-.featured-child .thumbnail {
-  opacity: 0;
 }
 
 .featured-child .vid {

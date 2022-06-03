@@ -1,10 +1,8 @@
-let previousSelection, lastInteraction, thumbnailsLoaded;
+let previousSelection, lastInteraction, thumbnailsLoaded,
+thumbnailsCopy = [];
 
 window.addEventListener('load', (event) => {
   animateIntro();
-
-  // lastInteraction = new Date();
-  // setInterval(interactionTimer, 1000);
 });
 
 
@@ -14,7 +12,7 @@ async function animateIntro() {
   const closeBtn = document.getElementById("close-button");
   const gallery = document.getElementsByClassName("square-gallery")[0];
   const modal = document.getElementById("modal");
-  let thumbnails = await createMoments(gallery);
+  let thumbnails = createMoments(gallery);
 
   // fade in credit part 1
   gallery.classList.toggle('elo-credit');
@@ -51,7 +49,7 @@ async function animateIntro() {
               let randomThumbnail = thumbnails[randNum];
 
               setTimeout(function() {
-                randomThumbnail.style.opacity = "1";
+                randomThumbnail.classList.toggle('visibility');
               }, 3000 + (index * 200));
 
               // animate title and info button in
@@ -59,11 +57,16 @@ async function animateIntro() {
                 setTimeout(function() {
                   title.classList.add("visible-header");
                   infoBtn.classList.add("visible-button");
+
                   thumbnailsLoaded = true;
+
+                  lastInteraction = new Date();
+                  setInterval(interactionTimer, 1000);
+
                 }, 3000 + (index * 200));
               }
 
-              thumbnails.splice(randNum, 1);
+              thumbnailsCopy.push(thumbnails.splice(randNum, 1));
               index ++;
             }
           }, 4000);
@@ -82,77 +85,65 @@ async function animateIntro() {
   });
 }
 
-async function createMoments(momentsGallery) {
+function createMoments(momentsGallery) {
   let thumbnails = [];
+  let index = 0;
 
-  for (let i = 0; i < 50; i++) {
-    let moment = document.createElement("div");
-    let thumbnail = document.createElement("div");
-    let image = document.createElement("img");
+  let links = fetch("../json/videos.json").then(response => {
+       return response.json();
+  }).then(jsondata => {
+    for (property in jsondata) {
+      let response = createMoment(index, jsondata[property]);
 
-    moment.classList.add('gallery-item');
-    thumbnail.classList.add('thumbnail');
-
-    // assign moment an index to be used on expand
-    moment.index = i;
-    // bind thumbnail clicks
-    moment.addEventListener('click', element => expandSquare(element));
-
-    thumbnail.appendChild(image);
-    moment.appendChild(thumbnail);
-
-    // temporary logic to only load thumbnail and featured videos that we have so far
-    if (i === 8 || i === 36) {
-      let gifLoaded = await loadVideo(thumbnail,  "../thumbnails/thumbnail_" + (i + 1) + ".mp4", bindThumbnailEvents);
-
-      if (gifLoaded) {
-        momentsGallery.appendChild(moment);
-        thumbnails.push(thumbnail);
-      }
-    } else if (i === 0) {
-      let videoLoaded = await loadVideo(moment, "https://player.vimeo.com/progressive_redirect/playback/670885525/rendition/1080p?loc=external&signature=b3279a20155efa74b5c2c50cf90d291a39ab8e3941db268a92aba7c950c1afdd", bindVideoEvents);
-
-      if (videoLoaded) {
-        momentsGallery.appendChild(moment);
-        thumbnails.push(thumbnail);
-      }
-    } else if (i === 10) {
-      let videoLoaded = await loadVideo(moment, "https://player.vimeo.com/progressive_redirect/playback/670885845/rendition/1080p?loc=external&signature=bd688e74915358ad1930b4067105c80973edd936b5d2592e1e276aff1072b34e", bindVideoEvents);
-
-      if (videoLoaded) {
-        momentsGallery.appendChild(moment);
-        thumbnails.push(thumbnail);
-      }
-    } else {
-      momentsGallery.appendChild(moment);
-      thumbnails.push(thumbnail);
+      momentsGallery.appendChild(response.moment);
+      thumbnails.push(response.thumbnail);
+      index ++;
     }
-  }
-
-  return new Promise(resolve => {
-   resolve(thumbnails);
   });
+
+  return thumbnails;
+}
+
+function createMoment(i, links) {
+  let moment = document.createElement("div");
+  let thumbnail = document.createElement("div");
+  let image = document.createElement("img");
+  let gifLoaded = loadVideo(thumbnail,  links.thumbnail, bindThumbnailEvents);
+  let videoLoaded = loadVideo(moment, links.video, bindVideoEvents);
+
+  moment.classList.add('gallery-item');
+  thumbnail.classList.add('thumbnail');
+
+  image.classList.add('image-default');
+  image.classList.add('visibility');
+
+  // assign moment an index to be used on expand
+  moment.index = i;
+  // bind thumbnail clicks
+  moment.addEventListener('click', element => expandSquare(element));
+
+  thumbnail.appendChild(image);
+  moment.appendChild(thumbnail);
+
+  return {thumbnail, moment};
 }
 
 function loadVideo(container, source, binding) {
   let video = document.createElement("video");
 
   video.src = source;
+
   container.appendChild(video);
   binding(video);
-
-  return new Promise(resolve => {
-    video.addEventListener('canplay', function() {
-      resolve(true);
-    });
-  });
 }
 
 function bindThumbnailEvents(gif) {
-  let image = gif.previousSibling;
+  gif.muted = "true";
 
   gif.addEventListener("ended", function() {
-    image.style.opacity = "1";
+    let image = gif.nextSibling;
+
+    image.classList.toggle('visibility');
   });
 }
 
@@ -169,23 +160,19 @@ function expandSquare(e) {
   if (thumbnailsLoaded) {
     let currentSelection = {
       container: e.currentTarget,
+      thumbnail: e.currentTarget.querySelector('.thumbnail'),
       video: e.currentTarget.querySelector('.vid')
     }
 
     if (previousSelection) {
-      if (previousSelection.video) {
-          previousSelection.video.pause();
-          previousSelection.video.currentTime = 0;
-      }
+      previousSelection.video.pause();
+      previousSelection.video.currentTime = 0;
 
       fadeTransition(previousSelection);
 
       if (previousSelection.container.index !== currentSelection.container.index) {
         fadeTransition(currentSelection);
-
-        if (currentSelection.video) {
-          currentSelection.video.play();
-        }
+        currentSelection.video.play();
 
         previousSelection = currentSelection;
 
@@ -196,10 +183,7 @@ function expandSquare(e) {
 
     } else {
       fadeTransition(currentSelection);
-
-      if (currentSelection.video) {
-        currentSelection.video.play();
-      }
+      currentSelection.video.play();
 
       previousSelection = currentSelection;
     }
@@ -208,6 +192,7 @@ function expandSquare(e) {
 
 function fadeTransition(selection) {
   selection.container.classList.toggle('opaque');
+  selection.thumbnail.classList.toggle('visibility');
 
   setTimeout(function() {
     selection.container.classList.toggle('featured-child');
@@ -236,30 +221,46 @@ function closeModal(modal) {
 }
 
 // gif timer
-function interactionTimer() {
+function interactionTimer(thumbnails) {
   let currentTime = new Date();
   let dif = lastInteraction.getTime() - currentTime.getTime();
 
   let secondsFrom = dif / 1000;
   let secondsBetween = Math.abs(secondsFrom);
 
-  console.log(secondsBetween);
+  if (thumbnailsLoaded) {
+    // every 10 seconds trigger a new set of gifs to play
+    if (secondsBetween >= 15) {
 
-  // every 10 seconds trigger a new set of gifs
-  if (secondsBetween >= 10) {
-    if (!previousSelection) {
-      for (let i = 0; i < thumbnails.length; i ++) {
+      if (!previousSelection) {
+        let randNums = generateRandomNum();
 
-        let thumbnail = {
-          image: thumbnails[i].querySelector('img'),
-          video: thumbnails[i].querySelector('video')
+        for (let i = 0; i < randNums.length; i ++) {
+          let randomMoment = thumbnailsCopy[randNums[i]][0];
+
+          let thumbnail = {
+            image: randomMoment.querySelector('img'),
+            video: randomMoment.querySelector('video')
+          }
+
+          thumbnail.image.classList.toggle('visibility');
+          thumbnail.video.play();
         }
-
-        thumbnail.image.style.opacity = "0";
-        thumbnail.video.play();
       }
-    }
 
-    lastInteraction = currentTime;
+      lastInteraction = currentTime;
+    }
   }
+}
+
+function generateRandomNum(){
+  let numbers = [];
+
+  while(numbers.length < 5) {
+    let r = Math.floor(Math.random() * thumbnailsCopy.length);
+
+    if(numbers.indexOf(r) === -1) numbers.push(r);
+  }
+
+  return numbers;
 }
