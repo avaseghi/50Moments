@@ -152,6 +152,8 @@ function bindVideoEvents(video) {
 
   video.addEventListener("ended", function() {
    previousSelection.container.classList.remove('featured-child');
+   previousSelection.thumbnail.classList.toggle('visibility');
+
    previousSelection = null;
   });
 }
@@ -256,7 +258,7 @@ function interactionTimer(thumbnails) {
 function generateRandomNum(){
   let numbers = [];
 
-  while(numbers.length < 5) {
+  while(numbers.length < 10) {
     let r = Math.floor(Math.random() * thumbnailsCopy.length);
 
     if(numbers.indexOf(r) === -1) numbers.push(r);
