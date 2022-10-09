@@ -1,18 +1,104 @@
-let previousSelection, lastInteraction, thumbnailsLoaded,
-thumbnailsCopy = [];
+let previousSelection, lastInteraction, thumbnailsLoaded, tabActive;
 
-window.addEventListener('load', (event) => {
-  animateIntro();
+window.addEventListener('load', function() {
+  let moments = createMoments();
+
+  document.addEventListener("visibilitychange", function() {
+    if (document.visibilityState === "visible") {
+      tabActive = true;
+    } else {
+      tabActive = false;
+    }
+  })
+
+  animateIntro(moments);
 });
 
+function createMoments() {
+  const moments = document.getElementsByClassName('gallery-item');
+  let thumbnails = [];
 
-async function animateIntro() {
+  for (let i = 0; i < moments.length; i++) {
+    let moment = moments[i];
+    let momentContent = moment.children;
+    let video = momentContent[0];
+    let thumbnail = momentContent[1];
+
+    // console.log("video number " + (i + 1) + " ready state is " + video.readyState);
+    //
+    // video.addEventListener('loadeddata', (e) => {
+    //  // video should now be loaded but we can add a second check
+    //
+    //  if (video.readyState >= 3){
+    //      console.log("video number " + (i + 1) + " ready state is " + video.readyState);
+    //  }
+    //
+    // });
+
+    // assign moment an index to be used on expand
+    moment.index = i;
+    // bind thumbnail clicks
+    moment.addEventListener('click', element => expandSquare(element));
+
+    bindVideoEvents(video);
+    thumbnails.push(thumbnail);
+
+    if (thumbnails.length == moments.length) {
+      let links = fetch("../json/videos.json").then(response => {
+           return response.json();
+      }).then(jsondata => {
+        let index = 0;
+
+        for (property in jsondata) {
+          let container = thumbnails[index];
+          let gif = createGif(jsondata[property].thumbnail);
+
+          container.appendChild(gif);
+          index ++;
+        }
+      });
+
+      return thumbnails;
+    }
+  }
+}
+
+function createGif(link) {
+  let gif = document.createElement("video");
+
+  gif.src = link;
+  gif.muted = "true";
+
+  // gif.addEventListener('loadeddata', (e) => {
+  //  // video should now be loaded but we can add a second check
+  //
+  //  if (gif.readyState >= 3){
+  //      console.log("gif src " + link + " is ready");
+  //  }
+  //
+  // });
+
+  return gif;
+}
+
+function bindVideoEvents(video) {
+  video.classList.add('vid');
+
+  video.addEventListener("ended", function() {
+   previousSelection.container.classList.remove('featured-child');
+   previousSelection.thumbnail.classList.toggle('visibility');
+
+   previousSelection = null;
+  });
+}
+
+async function animateIntro(thumbnails) {
   const title = document.getElementById("title-container");
   const infoBtn = document.getElementById("info-button");
   const closeBtn = document.getElementById("close-button");
   const gallery = document.getElementsByClassName("square-gallery")[0];
   const modal = document.getElementById("modal");
-  let thumbnails = createMoments(gallery);
+  let randIndexes = getRandNumArray(50);
 
   // fade in credit part 1
   gallery.classList.toggle('elo-credit');
@@ -41,19 +127,17 @@ async function animateIntro() {
           // fade out title
           setTimeout(function() {
             gallery.classList.toggle('fade-in');
-            let index = 1;
 
             // randomly fade in each thumbnail
-            while(thumbnails.length > 0) {
-              let randNum = Math.floor(Math.random() * thumbnails.length);
-              let randomThumbnail = thumbnails[randNum];
+            for (let i = 0; i < randIndexes.length; i++) {
+              let randomThumbnail = thumbnails[randIndexes[i]];
 
               setTimeout(function() {
                 randomThumbnail.classList.toggle('visibility');
-              }, 3000 + (index * 200));
+              }, 1000 + (i * 200));
 
               // animate title and info button in
-              if (index === 50) {
+              if (i === 49) {
                 setTimeout(function() {
                   title.classList.add("visible-header");
                   infoBtn.classList.add("visible-button");
@@ -61,19 +145,18 @@ async function animateIntro() {
                   thumbnailsLoaded = true;
 
                   lastInteraction = new Date();
-                  setInterval(interactionTimer, 1000);
+                  setInterval(function() {
+                    interactionTimer(thumbnails);
+                  }, 1000);
 
-                }, 3000 + (index * 200));
+                }, 1000 + (i * 200));
               }
-
-              thumbnailsCopy.push(thumbnails.splice(randNum, 1));
-              index ++;
             }
-          }, 4000);
-        }, 4000);
-      }, 4000);
-    }, 4000);
-  }, 4000);
+          }, 1250);
+        }, 1250);
+      }, 1250);
+    }, 1250);
+  }, 1250);
 
   // bind modal buttons
   infoBtn.addEventListener('click', function() {
@@ -85,77 +168,16 @@ async function animateIntro() {
   });
 }
 
-function createMoments(momentsGallery) {
-  let thumbnails = [];
-  let index = 0;
+function getRandNumArray(length) {
+  let randNums = [];
 
-  let links = fetch("../json/videos.json").then(response => {
-       return response.json();
-  }).then(jsondata => {
-    for (property in jsondata) {
-      let response = createMoment(index, jsondata[property]);
+  while (randNums.length < length) {
+    let randNum = Math.floor(Math.random() * 50);
 
-      momentsGallery.appendChild(response.moment);
-      thumbnails.push(response.thumbnail);
-      index ++;
-    }
-  });
+    if(randNums.indexOf(randNum) === -1) randNums.push(randNum);
+  }
 
-  return thumbnails;
-}
-
-function createMoment(i, links) {
-  let moment = document.createElement("div");
-  let thumbnail = document.createElement("div");
-  let image = document.createElement("img");
-  let gifLoaded = loadVideo(thumbnail,  links.thumbnail, bindThumbnailEvents);
-  let videoLoaded = loadVideo(moment, links.video, bindVideoEvents);
-
-  moment.classList.add('gallery-item');
-  thumbnail.classList.add('thumbnail');
-
-  image.classList.add('image-default');
-  image.classList.add('visibility');
-
-  // assign moment an index to be used on expand
-  moment.index = i;
-  // bind thumbnail clicks
-  moment.addEventListener('click', element => expandSquare(element));
-
-  thumbnail.appendChild(image);
-  moment.appendChild(thumbnail);
-
-  return {thumbnail, moment};
-}
-
-function loadVideo(container, source, binding) {
-  let video = document.createElement("video");
-
-  video.src = source;
-
-  container.appendChild(video);
-  binding(video);
-}
-
-function bindThumbnailEvents(gif) {
-  gif.muted = "true";
-
-  gif.addEventListener("ended", function() {
-    let image = gif.nextSibling;
-
-    image.classList.toggle('visibility');
-  });
-}
-
-function bindVideoEvents(video) {
-  video.classList.add('vid');
-
-  video.addEventListener("ended", function() {
-   previousSelection.container.classList.remove('featured-child');
-   previousSelection.thumbnail.classList.toggle('visibility');
-
-   previousSelection = null;
-  });
+  return randNums;
 }
 
 function expandSquare(e) {
@@ -167,8 +189,7 @@ function expandSquare(e) {
     }
 
     if (previousSelection) {
-      previousSelection.video.pause();
-      previousSelection.video.currentTime = 0;
+      previousSelection.video.load();
 
       fadeTransition(previousSelection);
 
@@ -177,7 +198,6 @@ function expandSquare(e) {
         currentSelection.video.play();
 
         previousSelection = currentSelection;
-
       } else {
 
         previousSelection = null;
@@ -230,39 +250,37 @@ function interactionTimer(thumbnails) {
   let secondsFrom = dif / 1000;
   let secondsBetween = Math.abs(secondsFrom);
 
-  if (thumbnailsLoaded) {
-    // every 10 seconds trigger a new set of gifs to play
-    if (secondsBetween >= 15) {
+  // every 15 seconds trigger a new set of gifs to play
+  if (secondsBetween >= 15) {
+    if (!previousSelection && tabActive) {
+      let randNums = [];
+      let randThumbnails = [];
 
-      if (!previousSelection) {
-        let randNums = generateRandomNum();
+      while(randThumbnails.length < 5) {
+        let randNum = Math.floor(Math.random() * 50);
+        let randThumbnail = thumbnails[randNum];
+        let gif = randThumbnail.querySelector('video')
 
-        for (let i = 0; i < randNums.length; i ++) {
-          let randomMoment = thumbnailsCopy[randNums[i]][0];
-
-          let thumbnail = {
-            image: randomMoment.querySelector('img'),
-            video: randomMoment.querySelector('video')
-          }
-
-          thumbnail.image.classList.toggle('visibility');
-          thumbnail.video.play();
+        if (randNums.indexOf(randNum) === -1 && gif.readyState >= 3) {
+          randThumbnails.push(randThumbnail);
+          randNums.push(randNum);
         }
       }
 
-      lastInteraction = currentTime;
+      for (let i = 0; i < randThumbnails.length; i ++) {
+        let thumbnail = {
+          image: randThumbnails[i].querySelector('img'),
+          gif: randThumbnails[i].querySelector('video')
+        }
+
+        if(thumbnail.image){
+          randThumbnails[i].removeChild(thumbnail.image)
+        }
+
+        thumbnail.gif.play();
+      }
     }
+
+    lastInteraction = currentTime;
   }
-}
-
-function generateRandomNum(){
-  let numbers = [];
-
-  while(numbers.length < 10) {
-    let r = Math.floor(Math.random() * thumbnailsCopy.length);
-
-    if(numbers.indexOf(r) === -1) numbers.push(r);
-  }
-
-  return numbers;
 }

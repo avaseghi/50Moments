@@ -14,7 +14,7 @@ body {
 .centered-content {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   width: 100vw;
   height: 100vh;
 }
@@ -38,7 +38,7 @@ header {
 header h1 {
   transform: translateY(-150%);
   opacity: 0;
-  margin: 50px 0 25px 0;
+  // margin: 50px 0 25px 0;
   transition: all 1s ease-in-out;
 }
 
@@ -69,7 +69,7 @@ header h1 {
   height: inherit;
   text-align: center;
   opacity: 0;
-  transition: opacity 4s ease-in-out;
+  transition: opacity 1.25s ease-in-out;
 }
 
 .elo-credit::after {
@@ -113,7 +113,7 @@ header h1 {
 
 .thumbnail {
   opacity: 0;
-  transition: opacity 1s ease-in-out;
+  transition: opacity 1.25s ease-in-out;
 }
 
 .image-default {
