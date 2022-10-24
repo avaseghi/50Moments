@@ -1,15 +1,8 @@
-let previousSelection, lastInteraction, thumbnailsLoaded, tabActive;
+let previousSelection, lastInteraction, thumbnailsLoaded,
+loadedGifs = [];
 
 window.addEventListener('load', function() {
   let moments = createMoments();
-
-  document.addEventListener("visibilitychange", function() {
-    if (document.visibilityState === "visible") {
-      tabActive = true;
-    } else {
-      tabActive = false;
-    }
-  })
 
   animateIntro(moments);
 });
@@ -51,9 +44,8 @@ function createMoments() {
 
         for (property in jsondata) {
           let container = thumbnails[index];
-          let gif = createGif(jsondata[property].thumbnail);
+          let gif = createGif(container, jsondata[property].thumbnail);
 
-          container.appendChild(gif);
           index ++;
         }
       });
@@ -63,22 +55,31 @@ function createMoments() {
   }
 }
 
-function createGif(link) {
+function createGif(container, link) {
   let gif = document.createElement("video");
 
   gif.src = link;
   gif.muted = "true";
 
-  // gif.addEventListener('loadeddata', (e) => {
-  //  // video should now be loaded but we can add a second check
-  //
-  //  if (gif.readyState >= 3){
-  //      console.log("gif src " + link + " is ready");
-  //  }
-  //
-  // });
+  container.appendChild(gif);
 
-  return gif;
+  gif.addEventListener('loadeddata', (e) => {
+  // video should now be loaded but we can add a second check
+
+   if (gif.readyState >= 3){
+       loadedGifs.push(container);
+
+       if (loadedGifs.length >= 5 && !lastInteraction) {
+         lastInteraction = new Date();
+
+         setInterval(function() {
+           interactionTimer();
+         }, 1000);
+
+          console.log(loadedGifs.length + " gifs are now loaded");
+       }
+   }
+  });
 }
 
 function bindVideoEvents(video) {
@@ -92,7 +93,7 @@ function bindVideoEvents(video) {
   });
 }
 
-async function animateIntro(thumbnails) {
+function animateIntro(thumbnails) {
   const title = document.getElementById("title-container");
   const infoBtn = document.getElementById("info-button");
   const closeBtn = document.getElementById("close-button");
@@ -143,11 +144,6 @@ async function animateIntro(thumbnails) {
                   infoBtn.classList.add("visible-button");
 
                   thumbnailsLoaded = true;
-
-                  lastInteraction = new Date();
-                  setInterval(function() {
-                    interactionTimer(thumbnails);
-                  }, 1000);
 
                 }, 1000 + (i * 200));
               }
@@ -243,7 +239,7 @@ function closeModal(modal) {
 }
 
 // gif timer
-function interactionTimer(thumbnails) {
+function interactionTimer() {
   let currentTime = new Date();
   let dif = lastInteraction.getTime() - currentTime.getTime();
 
@@ -251,17 +247,16 @@ function interactionTimer(thumbnails) {
   let secondsBetween = Math.abs(secondsFrom);
 
   // every 15 seconds trigger a new set of gifs to play
-  if (secondsBetween >= 15) {
-    if (!previousSelection && tabActive) {
+  if (secondsBetween >= 15 && thumbnailsLoaded) {
+    if (!previousSelection) {
       let randNums = [];
       let randThumbnails = [];
 
-      while(randThumbnails.length < 5) {
-        let randNum = Math.floor(Math.random() * 50);
-        let randThumbnail = thumbnails[randNum];
-        let gif = randThumbnail.querySelector('video')
+      while (randThumbnails.length < 5) {
+        let randNum = Math.floor(Math.random() * loadedGifs.length);
+        let randThumbnail = loadedGifs[randNum];
 
-        if (randNums.indexOf(randNum) === -1 && gif.readyState >= 3) {
+        if (randNums.indexOf(randNum) === -1) {
           randThumbnails.push(randThumbnail);
           randNums.push(randNum);
         }
@@ -273,7 +268,7 @@ function interactionTimer(thumbnails) {
           gif: randThumbnails[i].querySelector('video')
         }
 
-        if(thumbnail.image){
+        if (thumbnail.image){
           randThumbnails[i].removeChild(thumbnail.image)
         }
 
