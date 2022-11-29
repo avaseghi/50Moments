@@ -4,6 +4,8 @@ loadedGifs = [];
 window.addEventListener('load', function() {
   let moments = createMoments();
 
+  console("site updated 11/29");
+
   animateIntro(moments);
 });
 
@@ -60,6 +62,7 @@ function createGif(container, link) {
 
   gif.src = link;
   gif.muted = "true";
+  gif.playsInline = "true";
 
   container.appendChild(gif);
 
