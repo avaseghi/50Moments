@@ -4,8 +4,6 @@ loadedGifs = [];
 window.addEventListener('load', function() {
   let moments = createMoments();
 
-  console("site updated 11/29");
-
   animateIntro(moments);
 });
 
