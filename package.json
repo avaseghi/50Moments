@@ -1,0 +1,28 @@
+{
+  "name": "50moments",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "heroku-postbuild": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://rbs517@github.com/avaseghi/50Moments.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/avaseghi/50Moments/issues"
+  },
+  "homepage": "https://github.com/avaseghi/50Moments#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "path": "^0.12.7"
+  },
+  "engines": {
+    "node": "14.15.0"
+  }
+}
