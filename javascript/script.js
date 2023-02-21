@@ -16,24 +16,7 @@ function createMoments() {
     let momentContent = moment.children;
     let video = momentContent[0];
     let thumbnail = momentContent[1];
-
-    // console.log("video number " + (i + 1) + " ready state is " + video.readyState);
-    //
-    // video.addEventListener('loadeddata', (e) => {
-    //  // video should now be loaded but we can add a second check
-    //
-    //  if (video.readyState >= 3){
-    //      console.log("video number " + (i + 1) + " ready state is " + video.readyState);
-    //  }
-    //
-    // });
-
-    // assign moment an index to be used on expand
-    moment.index = i;
-    // bind thumbnail clicks
-    moment.addEventListener('click', element => expandSquare(element));
-
-    bindVideoEvents(video);
+    
     thumbnails.push(thumbnail);
 
     if (thumbnails.length == moments.length) {
@@ -65,7 +48,7 @@ function createGif(container, link) {
   container.appendChild(gif);
 
   gif.addEventListener('loadeddata', (e) => {
-  // video should now be loaded but we can add a second check
+  // check if gif has loaded
 
    if (gif.readyState >= 3){
        loadedGifs.push(container);
@@ -74,7 +57,7 @@ function createGif(container, link) {
          lastInteraction = new Date();
 
          setInterval(function() {
-           interactionTimer();
+           gifTimer();
          }, 1000);
 
           console.log(loadedGifs.length + " gifs are now loaded");
@@ -83,15 +66,45 @@ function createGif(container, link) {
   });
 }
 
-function bindVideoEvents(video) {
-  video.classList.add('vid');
+function gifTimer() {
+  let currentTime = new Date();
+  let dif = lastInteraction.getTime() - currentTime.getTime();
 
-  video.addEventListener("ended", function() {
-   previousSelection.container.classList.remove('featured-child');
-   previousSelection.thumbnail.classList.toggle('visibility');
+  let secondsFrom = dif / 1000;
+  let secondsBetween = Math.abs(secondsFrom);
 
-   previousSelection = null;
-  });
+  // every 15 seconds trigger a new set of gifs to play
+  if (secondsBetween >= 15 && thumbnailsLoaded) {
+    if (!previousSelection) {
+      let randNums = [];
+      let randThumbnails = [];
+
+      while (randThumbnails.length < 5) {
+        let randNum = Math.floor(Math.random() * loadedGifs.length);
+        let randThumbnail = loadedGifs[randNum];
+
+        if (randNums.indexOf(randNum) === -1) {
+          randThumbnails.push(randThumbnail);
+          randNums.push(randNum);
+        }
+      }
+
+      for (let i = 0; i < randThumbnails.length; i ++) {
+        let thumbnail = {
+          image: randThumbnails[i].querySelector('img'),
+          gif: randThumbnails[i].querySelector('video')
+        }
+
+        if (thumbnail.image){
+          randThumbnails[i].removeChild(thumbnail.image)
+        }
+
+        thumbnail.gif.play();
+      }
+    }
+
+    lastInteraction = currentTime;
+  }
 }
 
 function animateIntro(thumbnails) {
@@ -179,10 +192,11 @@ function getRandNumArray(length) {
 
 function expandSquare(e) {
   if (thumbnailsLoaded) {
+
     let currentSelection = {
-      container: e.currentTarget,
-      thumbnail: e.currentTarget.querySelector('.thumbnail'),
-      video: e.currentTarget.querySelector('.vid')
+      container: e,
+      thumbnail: e.querySelector('.thumbnail'),
+      video: e.querySelector('.vid')
     }
 
     if (previousSelection) {
@@ -190,7 +204,7 @@ function expandSquare(e) {
 
       fadeTransition(previousSelection);
 
-      if (previousSelection.container.index !== currentSelection.container.index) {
+      if (previousSelection.container.dataset.index !== currentSelection.container.dataset.index) {
         fadeTransition(currentSelection);
         currentSelection.video.play();
 
@@ -222,6 +236,13 @@ function fadeTransition(selection) {
   }, 600);
 }
 
+function collapseSquare() {
+  previousSelection.container.classList.remove('featured-child');
+  previousSelection.thumbnail.classList.toggle('visibility');
+
+  previousSelection = null;
+}
+
 function openModal(modal) {
   if (previousSelection) {
     if (previousSelection.video) {
@@ -237,46 +258,4 @@ function openModal(modal) {
 
 function closeModal(modal) {
   modal.style.visibility = "hidden";
-}
-
-// gif timer
-function interactionTimer() {
-  let currentTime = new Date();
-  let dif = lastInteraction.getTime() - currentTime.getTime();
-
-  let secondsFrom = dif / 1000;
-  let secondsBetween = Math.abs(secondsFrom);
-
-  // every 15 seconds trigger a new set of gifs to play
-  if (secondsBetween >= 15 && thumbnailsLoaded) {
-    if (!previousSelection) {
-      let randNums = [];
-      let randThumbnails = [];
-
-      while (randThumbnails.length < 5) {
-        let randNum = Math.floor(Math.random() * loadedGifs.length);
-        let randThumbnail = loadedGifs[randNum];
-
-        if (randNums.indexOf(randNum) === -1) {
-          randThumbnails.push(randThumbnail);
-          randNums.push(randNum);
-        }
-      }
-
-      for (let i = 0; i < randThumbnails.length; i ++) {
-        let thumbnail = {
-          image: randThumbnails[i].querySelector('img'),
-          gif: randThumbnails[i].querySelector('video')
-        }
-
-        if (thumbnail.image){
-          randThumbnails[i].removeChild(thumbnail.image)
-        }
-
-        thumbnail.gif.play();
-      }
-    }
-
-    lastInteraction = currentTime;
-  }
 }
