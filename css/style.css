@@ -3,7 +3,6 @@
   src: url(../fonts/Sohne-Leicht.woff);
   font-weight: light;
 }
-
 body {
   margin: 0;
   background-color: #000000;
@@ -96,6 +95,10 @@ header h1 {
   background-size: cover;
   background-repeat: no-repeat;
   transition: all 0.25s ease-in-out;
+}
+
+.display-default {
+  display: none;
 }
 
 .gallery-item:nth-child(1) .thumbnail img {
@@ -419,7 +422,7 @@ footer .visible-button {
   align-items: center;
 }
 
-@media only screen and (max-width: 600) {
+@media only screen and (max-width: 600px) {
   .square-gallery {
     --items: 2;
   }

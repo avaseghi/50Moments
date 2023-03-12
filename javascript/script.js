@@ -1,7 +1,8 @@
-let previousSelection, lastInteraction, thumbnailsLoaded,
+let previousSelection, thumbnailsLoaded, deviceWidth, gifTimer, randThumbnails,
 loadedGifs = [];
 
 window.addEventListener('load', function() {
+  deviceWidth = screen.width;
   let moments = createMoments();
 
   animateIntro(moments);
@@ -14,24 +15,35 @@ function createMoments() {
   for (let i = 0; i < moments.length; i++) {
     let moment = moments[i];
     let momentContent = moment.children;
-    let video = momentContent[0];
     let thumbnail = momentContent[1];
-    
+
+    if (deviceWidth < 600) {
+      moment.classList.toggle('display-default');
+    }
+
     thumbnails.push(thumbnail);
 
     if (thumbnails.length == moments.length) {
-      let links = fetch("../json/videos.json").then(response => {
-           return response.json();
-      }).then(jsondata => {
-        let index = 0;
 
-        for (property in jsondata) {
-          let container = thumbnails[index];
-          let gif = createGif(container, jsondata[property].thumbnail);
+      if (deviceWidth > 600) {
+        let links = fetch("../json/videos.json").then(response => {
+             return response.json();
 
-          index ++;
-        }
-      });
+        }).then(jsondata => {
+          let index = 0;
+
+          for (property in jsondata) {
+            let container = thumbnails[index];
+            let gif = createGif(container, jsondata[property].thumbnail);
+
+            index ++;
+          }
+        });
+
+        var statusCheck = setInterval(function() {
+          checkGifStatus(statusCheck)
+        }, 3000);
+      }
 
       return thumbnails;
     }
@@ -39,6 +51,7 @@ function createMoments() {
 }
 
 function createGif(container, link) {
+  let thumbnailImg = container.querySelector('img');
   let gif = document.createElement("video");
 
   gif.src = link;
@@ -47,73 +60,75 @@ function createGif(container, link) {
 
   container.appendChild(gif);
 
-  gif.addEventListener('loadeddata', (e) => {
   // check if gif has loaded
+  gif.addEventListener('loadeddata', (e) => {
 
-   if (gif.readyState >= 3){
-       loadedGifs.push(container);
-
-       if (loadedGifs.length >= 5 && !lastInteraction) {
-         lastInteraction = new Date();
-
-         setInterval(function() {
-           gifTimer();
-         }, 1000);
-
-          console.log(loadedGifs.length + " gifs are now loaded");
-       }
-   }
+    if (gif.readyState >= 3) {
+     container.removeChild(thumbnailImg);
+     loadedGifs.push(gif);
+    }
   });
 }
 
-function gifTimer() {
-  let currentTime = new Date();
-  let dif = lastInteraction.getTime() - currentTime.getTime();
+function checkGifStatus(statCheck) {
+  console.log("checking gif status");
 
-  let secondsFrom = dif / 1000;
-  let secondsBetween = Math.abs(secondsFrom);
+  if (loadedGifs.length >= 5 && thumbnailsLoaded && !previousSelection) {
+    console.log( loadedGifs.length + " gifs loaded");
 
-  // every 15 seconds trigger a new set of gifs to play
-  if (secondsBetween >= 15 && thumbnailsLoaded) {
-    if (!previousSelection) {
-      let randNums = [];
-      let randThumbnails = [];
+    clearInterval(statCheck);
+    playGifs();
+  }
+}
 
-      while (randThumbnails.length < 5) {
-        let randNum = Math.floor(Math.random() * loadedGifs.length);
-        let randThumbnail = loadedGifs[randNum];
+function playGifs() {
+  let randNums = [];
+  let gifsPlayed = 0;
+  randThumbnails = [];
 
-        if (randNums.indexOf(randNum) === -1) {
-          randThumbnails.push(randThumbnail);
-          randNums.push(randNum);
-        }
-      }
+  console.log("playing gifs");
 
-      for (let i = 0; i < randThumbnails.length; i ++) {
-        let thumbnail = {
-          image: randThumbnails[i].querySelector('img'),
-          gif: randThumbnails[i].querySelector('video')
-        }
+  while (randThumbnails.length < 5) {
+    let randNum = Math.floor(Math.random() * loadedGifs.length);
+    let randThumbnail = loadedGifs[randNum];
 
-        if (thumbnail.image){
-          randThumbnails[i].removeChild(thumbnail.image)
-        }
+    if (randNums.indexOf(randNum) === -1) {
+      randThumbnail.addEventListener("ended", function() {
 
-        thumbnail.gif.play();
-      }
+        var handler = function() {
+          let thumbIndex =  randThumbnails.indexOf(this);
+
+          console.log("video " + (thumbIndex + 1) + " ended");
+
+          randThumbnails[thumbIndex].removeEventListener("ended", handler);
+
+          gifsPlayed += 1;
+
+          console.log((randThumbnails.length - gifsPlayed) + " videos playing");
+
+          if (gifsPlayed > 4) {
+            gifTimer = setTimeout(playGifs, 15000);
+          }
+        };``
+
+        return handler;
+      }());
+
+      randThumbnails.push(randThumbnail);
+      randNums.push(randNum);
     }
+  }
 
-    lastInteraction = currentTime;
+  for (let i = 0; i < randThumbnails.length; i ++) {
+    let gif = randThumbnails[i];
+
+    gif.play();
   }
 }
 
 function animateIntro(thumbnails) {
-  const title = document.getElementById("title-container");
-  const infoBtn = document.getElementById("info-button");
-  const closeBtn = document.getElementById("close-button");
   const gallery = document.getElementsByClassName("square-gallery")[0];
-  const modal = document.getElementById("modal");
-  let randIndexes = getRandNumArray(50);
+  let randIndexes = deviceWidth > 600 ? getRandNumArray(50) : false;
 
   // fade in credit part 1
   gallery.classList.toggle('elo-credit');
@@ -144,29 +159,49 @@ function animateIntro(thumbnails) {
             gallery.classList.toggle('fade-in');
 
             // randomly fade in each thumbnail
-            for (let i = 0; i < randIndexes.length; i++) {
-              let randomThumbnail = thumbnails[randIndexes[i]];
+            for (let i = 0; i < thumbnails.length; i++) {
+              let randomThumbnail = randIndexes ? thumbnails[randIndexes[i]] : thumbnails[i];
+              let thumbParent = randomThumbnail.parentElement;
+
+              if (deviceWidth < 600) {
+                if (i == 0) {
+                  animateTitle(i);
+                }
+
+                setTimeout(function() {
+                  thumbParent.classList.toggle('display-default');
+                }, 500 + (i * 200));
+
+              } else {
+                if (i == 49) {
+                  animateTitle(i);
+                }
+              }
 
               setTimeout(function() {
                 randomThumbnail.classList.toggle('visibility');
               }, 1000 + (i * 200));
-
-              // animate title and info button in
-              if (i === 49) {
-                setTimeout(function() {
-                  title.classList.add("visible-header");
-                  infoBtn.classList.add("visible-button");
-
-                  thumbnailsLoaded = true;
-
-                }, 1000 + (i * 200));
-              }
             }
           }, 1250);
         }, 1250);
       }, 1250);
     }, 1250);
   }, 1250);
+}
+
+// animate title and info button in
+function animateTitle(count) {
+  const title = document.getElementById("title-container");
+  const modal = document.getElementById("modal");
+  const infoBtn = document.getElementById("info-button");
+  const closeBtn = document.getElementById("close-button");
+
+  setTimeout(function() {
+    title.classList.add("visible-header");
+    infoBtn.classList.add("visible-button");
+
+    thumbnailsLoaded = true;
+  }, 1000 + (count * 200));
 
   // bind modal buttons
   infoBtn.addEventListener('click', function() {
@@ -184,15 +219,15 @@ function getRandNumArray(length) {
   while (randNums.length < length) {
     let randNum = Math.floor(Math.random() * 50);
 
-    if(randNums.indexOf(randNum) === -1) randNums.push(randNum);
+    if (randNums.indexOf(randNum) === -1) randNums.push(randNum);
   }
 
   return randNums;
 }
 
 function expandSquare(e) {
-  if (thumbnailsLoaded) {
 
+  if (thumbnailsLoaded) {
     let currentSelection = {
       container: e,
       thumbnail: e.querySelector('.thumbnail'),
@@ -201,7 +236,6 @@ function expandSquare(e) {
 
     if (previousSelection) {
       previousSelection.video.load();
-
       fadeTransition(previousSelection);
 
       if (previousSelection.container.dataset.index !== currentSelection.container.dataset.index) {
@@ -215,12 +249,32 @@ function expandSquare(e) {
       }
 
     } else {
+      pauseGifs();
       fadeTransition(currentSelection);
       currentSelection.video.play();
 
       previousSelection = currentSelection;
     }
   }
+}
+
+function pauseGifs() {
+
+  if (randThumbnails.length > 0) {
+    console.log("pausing gifs");
+
+    for (let i = 0; i < randThumbnails.length; i ++) {
+      let gif = randThumbnails[i];
+
+      gif.pause();
+    }
+  }
+
+  clearInterval(gifTimer);
+
+  var statusCheck = setInterval(function() {
+    checkGifStatus(statusCheck)
+  }, 3000);
 }
 
 function fadeTransition(selection) {

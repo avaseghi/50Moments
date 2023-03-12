@@ -99,6 +99,10 @@ header h1 {
   transition: all 0.25s ease-in-out;
 }
 
+.display-default {
+  display: none;
+}
+
 @for $i from 1 through 50 {
   .gallery-item:nth-child(#{$i}) .thumbnail img {
     content: url("../thumbnails/thumbnail_#{$i}.jpg");
@@ -226,7 +230,7 @@ footer .visible-button {
   align-items: center;
 }
 
-@media screen and (max-width: 600) {
+@media only screen and (max-width: 600px) {
   .square-gallery {
     --items: 2;
   }
