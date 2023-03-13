@@ -26,7 +26,7 @@ function createMoments() {
     if (thumbnails.length == moments.length) {
 
       if (deviceWidth > 600) {
-        let links = fetch("../json/videos.json").then(response => {
+        let links = fetch("json/videos.json").then(response => {
              return response.json();
 
         }).then(jsondata => {
