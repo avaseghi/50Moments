@@ -249,7 +249,11 @@ function expandSquare(e) {
       }
 
     } else {
-      pauseGifs();
+
+      if (deviceWidth > 600) {
+        pauseGifs();
+      }
+      
       fadeTransition(currentSelection);
       currentSelection.video.play();
 
