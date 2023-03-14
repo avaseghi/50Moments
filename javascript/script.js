@@ -55,8 +55,8 @@ function createGif(container, link) {
   let gif = document.createElement("video");
 
   gif.src = link;
-  gif.muted = "true";
-  gif.playsInline = "true";
+  gif.muted = true;
+  gif.playsInline = true;
 
   container.appendChild(gif);
 
@@ -253,7 +253,7 @@ function expandSquare(e) {
       if (deviceWidth > 600) {
         pauseGifs();
       }
-      
+
       fadeTransition(currentSelection);
       currentSelection.video.play();
 
