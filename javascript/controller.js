@@ -72,7 +72,7 @@ export const controller = {
 
   createGifs: function () {
     return new Promise ((resolve, reject) => {
-      let links = fetch("../json/videos.json").then(response => {
+      let links = fetch(".../json/videos.json").then(response => {
         return response.json();
 
       }).then(jsondata => {
