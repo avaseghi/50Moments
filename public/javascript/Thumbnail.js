@@ -1,3 +1,5 @@
+import {controller} from './controller.js'
+
 export function Thumbnail (container) {
   this.container = container,
   this.video = this.container.children[0],
@@ -6,14 +8,10 @@ export function Thumbnail (container) {
   this.gifHandler
 }
 
-Thumbnail.prototype.isOnMobile = screen.width < 600 ? true : false;
-
 Thumbnail.prototype.animate = function (count) {
   let thisThumbnail = this;
 
-  if (thisThumbnail.isOnMobile) {
-    console.log(thisThumbnail.isOnMobile);
-    
+  if (controller.getMobileStatus()) {
     setTimeout (function() {
       thisThumbnail.container.classList.toggle('display-default');
     }, 500 + (count * 200));
@@ -79,7 +77,6 @@ Thumbnail.prototype.playGif = function () {
   let thisMoment = this;
 
   return new Promise ((resolve, reject) => {
-
     let endHandler = function() {
       thisMoment.gif.removeEventListener("ended", endHandler);
       resolve();

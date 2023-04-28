@@ -2,6 +2,7 @@ import {Thumbnail} from './Thumbnail.js'
 import {view} from './view.js'
 
 const data =  {
+  mobileStatus : screen.width < 600 ? true : false,
   previousSelection: null,
   currentSelection: null,
   thumbnails: [],
@@ -16,6 +17,10 @@ export const controller = {
     this.createThumbnails().then(view.init());
   },
 
+  getMobileStatus: function () {
+    return data.mobileStatus;
+  },
+
   createThumbnails: function () {
     return new Promise ((resolve, reject) => {
       let moments = document.getElementsByClassName('gallery-item');
@@ -23,6 +28,7 @@ export const controller = {
       for (let i = 0; i < moments.length; i ++) {
         let thumbnail = new Thumbnail(moments[i]);
 
+        if (data.mobileStatus) thumbnail.container.classList.toggle('display-default');
         data.thumbnails.push(thumbnail);
       }
     });

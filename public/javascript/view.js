@@ -8,9 +8,9 @@ export const view =  {
 
   animateIntro: function () {
     let thisView = this;
-    let isOnMobile = screen.width < 600 ? true : false;
+    let onMobile = controller.getMobileStatus();
     let gallery = document.getElementsByClassName("gallery")[0];
-    let thumbnails = controller.getThumbnails(50, 50, !isOnMobile);
+    let thumbnails = controller.getThumbnails(50, 50, !onMobile);
     let title = document.getElementById("title-container");
     let infoButton = document.getElementById("info-button");
 
@@ -46,19 +46,30 @@ export const view =  {
               for (let i = 0; i < thumbnails.length; i ++) {
                 thumbnails[i].animate(i);
 
-                if (i === 49) {
-                  setTimeout(function() {
-                    title.classList.add("visible-header");
-                    infoButton.classList.add("visible-button");
+                if (!onMobile) {
+                  if (i === 49) {
+                    setTimeout(function() {
+                      title.classList.add("visible-header");
+                      infoButton.classList.add("visible-button");
 
-                    thisView.bindEvents(thumbnails, infoButton);
+                      thisView.bindEvents(thumbnails, infoButton);
 
-                    if (!isOnMobile) {
                       controller.createGifs().then(() => {
                         thisView.playGifs();
                       });
-                    }
-                  }, 1000 + (i * 200));
+                    }, 1000 + (i * 200));
+                  }
+
+                } else {
+                  if (i === 0) {
+                    setTimeout(function() {
+                      title.classList.add("visible-header");
+                      infoButton.classList.add("visible-button");
+                    }, 1000 + (i * 200));
+
+                  } else if (i === 49) {
+                    thisView.bindEvents(thumbnails, infoButton);
+                  }
                 }
               }
             }, 1250);
@@ -123,56 +134,64 @@ export const view =  {
   },
 
   playGifs: function () {
-    let gifs = controller.getGifs();
-    let gifsPlayed = 0;
-    let thisView = this;
+    if (!controller.getMobileStatus()) {
+      let gifs = controller.getGifs();
+      let gifsPlayed = 0;
+      let thisView = this;
 
-    console.log("playing gifs");
+      console.log("playing gifs");
 
-    for (let i = 0; i < gifs.length; i ++) {
-      gifs[i].playGif().then(() => {
-        console.log("gif " + i + " ended");
+      for (let i = 0; i < gifs.length; i ++) {
+        gifs[i].playGif().then(() => {
+          console.log("gif " + i + " ended");
 
-        gifsPlayed ++;
+          gifsPlayed ++;
 
-        console.log((gifs.length - gifsPlayed) + " gifs playing");
+          console.log((gifs.length - gifsPlayed) + " gifs playing");
 
-        if (gifsPlayed > 4) {
-          console.clear();
-          console.log("gif timer started");
+          if (gifsPlayed > 4) {
+            console.clear();
+            console.log("gif timer started");
 
-          let gifTimer = setTimeout(function() {
-            controller.setGifs();
-            controller.setGifTimer();
-            thisView.playGifs();
-          }, 15000);
+            let gifTimer = setTimeout(function() {
+              controller.setGifs();
+              controller.setGifTimer();
+              thisView.playGifs();
+            }, 15000);
 
-          controller.setGifTimer(gifTimer);
-        }
-      });
+            controller.setGifTimer(gifTimer);
+          }
+        });
+      }
+    } else {
+        return;
     }
   },
 
   pauseGifs: function () {
-    let gifs = controller.getGifs();
-    let gifTimer = controller.getGifTimer();
+    if (!controller.getMobileStatus()) {
+      let gifs = controller.getGifs();
+      let gifTimer = controller.getGifTimer();
 
-    if (gifTimer) {
-      console.log("clearing gif timer");
+      if (gifTimer) {
+        console.log("clearing gif timer");
 
-      clearTimeout(gifTimer);
+        clearTimeout(gifTimer);
 
-      controller.setGifs();
-      controller.setGifTimer();
+        controller.setGifs();
+        controller.setGifTimer();
 
-    } else {
-      console.log("pausing gifs");
+      } else {
+        console.log("pausing gifs");
 
-      for (let i = 0; i < gifs.length; i++) {
-        let gif = gifs[i];
+        for (let i = 0; i < gifs.length; i++) {
+          let gif = gifs[i];
 
-        gif.pauseGif();
+          gif.pauseGif();
+        }
       }
+    } else {
+      return;
     }
   }
 }
